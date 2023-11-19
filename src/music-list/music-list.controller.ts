@@ -4,7 +4,6 @@ import { Music } from './schemas/music-list.schema';
 import { AddMusicDto} from './dto/add-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
 import { JwtAuthGuard } from 'src/auth/admin.guard';
-import { UserRole } from 'src/auth/user-role.enum';
 import { ForbiddenException } from '@nestjs/common';
 import { Request } from 'express';
 
