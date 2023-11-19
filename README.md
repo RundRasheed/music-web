@@ -1,73 +1,154 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# music
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Simple Song Library Backend
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project provides a simple backend for a song library website, allowing public users to view a list of songs with metadata and enabling admin users to add new songs. The backend is built using NestJS and stores data in a MongoDB database. Additionally, the project is containerized using Docker for easy deployment.
 
-## Description
+## Prerequisites
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Make sure you have the following tools installed on your system:
 
-## Installation
+- Node.js and npm: [Node.js Downloads](https://nodejs.org/)
+- Docker: [Docker Install](https://docs.docker.com/get-docker/)
+- Docker Compose: [Docker Compose Install](https://docs.docker.com/compose/install/)
+
+## Getting Started
+
+1. Clone the repository from GitHub:
 
 ```bash
-$ npm install
+git clone https://github.com/your-username/song-library-backend.git
+cd song-library-backend
 ```
 
-## Running the app
+2. Install dependencies:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Test
+3. Create a `.env` file in the project root with the following content:
+
+```
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+```
+
+Replace `your_mongodb_connection_string` with the actual connection string for your MongoDB instance and `your_secret_key` with a secure secret key for JWT authentication.
+
+4. Build the Docker image:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker build -t song-library-backend .
 ```
 
-## Support
+5. Run the Docker container:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+docker run -p 3000:3000 --env-file .env song-library-backend
+```
 
-## Stay in touch
+The backend server should now be running at http://localhost:3000.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Docker Compose 
 
-## License
+If you prefer using Docker Compose, make sure you have it installed. Then, run the following command:
 
-Nest is [MIT licensed](LICENSE).
+```bash
+docker-compose up
+```
+
+This will start both the backend server and MongoDB in separate containers.
+
+## API Endpoints
+
+### Get User by ID:
+Endpoint: GET /users/:userId
+
+Retrieve user information by providing the user ID in the path.
+
+### Get All Users:
+Endpoint: GET /users
+
+Retrieve a list of all users.
+
+### Create User
+Endpoint: POST /users
+
+Create a new user by providing the user details in the request body.
+
+Request Body:
+```json
+{
+  "name": "New User",
+  "role": "USER"
+}
+```
+
+### Update User by ID:
+Endpoint: PATCH /users/:userId
+
+Update user details by providing the user ID in the path and the updated details in the request body.
+
+Request Body:
+```json
+{
+  "name": "Updated User",
+  "role": "ADMIN"
+}
+```
+
+### Get Song by ID:
+Endpoint: GET /music-list/:music_id
+
+Retrieve song details by providing the song ID in the path.
+
+### Get Paginated Song List:
+Endpoint: GET /music-list
+
+Retrieve a paginated list of songs. 
+
+Optionally, provide page and limit query parameters for pagination. By default it gets 10 songs per page.
+
+### Create Song:
+Endpoint: POST /music-list
+
+Create a new song by providing the song details in the request body. (Admin access only)
+
+Request body:
+```json
+{
+  "music_name": "New Song",
+  "singer": "New Artist",
+  "recording_date": "20230101",
+  "cover_image": "https://example.com/new_cover_image.jpg"
+}
+```
+
+### Update Song by ID:
+Endpoint: PATCH /music-list/:music_id
+
+Update song details by providing the song ID in the path and the updated details in the request body.
+
+Request body:
+```json
+{
+  "music_name": "New Song",
+  "singer": "New Artist",
+  "recording_date": "20230101",
+  "cover_image": "https://example.com/new_cover_image.jpg"
+}
+```
+
+### Search Songs:
+Endpoint: GET /music-list/search/:query
+
+Search for songs based on the provided query.
+
+
+
+## Authentication
+For admin functionality, JWT authentication is used. 
+
+To authenticate as an admin, include the generated JWT token in the Authorization header of your requests.
+
